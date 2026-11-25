@@ -1,0 +1,50 @@
+2026-11-25T08:01:12Z | INFO | motion-pipeline | device=RING-CAM-1042 | Motion alert received (zone=front_porch, confidence=0.94)
+2026-11-25T08:04:45Z | INFO | api-gateway | device=RING-DOOR-2088 | Device heartbeat ACK (firmware=2.14.8, rssi=-54dBm)
+2026-11-25T08:09:10Z | WARN | telemetry-db | device=SYSTEM | Connection pool utilization at 88% (44/50 active connections)
+2026-11-25T08:11:54Z | ERROR | telemetry-db | device=RING-CAM-1042 | Query timeout persisting motion telemetry event
+Traceback (most recent call last):
+  File "/srv/ring/telemetry/writer.py", line 142, in persist_motion_event
+    cursor.execute("INSERT INTO motion_events (device_id, ts, payload) VALUES (%s, %s, %s)", params)
+  File "/usr/local/lib/python3.14/site-packages/psycopg2/pool.py", line 118, in getconn
+    raise PoolError("connection pool exhausted")
+psycopg2.OperationalError: connection pool exhausted after 5000ms timeout
+2026-11-25T08:12:08Z | CRITICAL | telemetry-db | device=SYSTEM | Database write tier unreachable: connection pool exhausted across primary shard
+Traceback (most recent call last):
+  File "/srv/ring/telemetry/healthcheck.py", line 64, in verify_db_pool
+    conn = db_pool.acquire(timeout=3.0)
+TimeoutError: db timeout waiting for free connection on telemetry-db primary
+2026-11-25T08:15:30Z | INFO | telemetry-db | device=SYSTEM | Connection pool recovered to 32% utilization after read-replica rebalance
+
+2026-11-25T09:31:02Z | INFO | api-gateway | device=RING-DOOR-2088 | Incoming legacy XML telemetry envelope from doorbell gateway
+2026-11-25T09:36:19Z | ERROR | xml-ingest | device=RING-DOOR-2088 | Malformed XML payload rejected at telemetry ingestion endpoint
+Traceback (most recent call last):
+  File "/srv/ring/ingest/xml_decoder.py", line 57, in decode_device_envelope
+    tree = ET.fromstring(raw_payload)
+xml.etree.ElementTree.ParseError: mismatched tag: line 4, column 18
+Payload: <motionEvent device="RING-DOOR-2088"><severity>high</severity><clipId>99182</motionEvent>
+2026-11-25T09:40:00Z | INFO | motion-pipeline | device=RING-CAM-1042 | Motion alert dispatched in 140ms
+
+2026-11-25T10:18:11Z | INFO | api-gateway | device=RING-FLOOD-5011 | Floodlight motion stream heartbeat OK
+2026-11-25T10:22:47Z | ERROR | json-ingest | device=RING-FLOOD-5011 | Malformed JSON telemetry frame failed schema decoding
+Traceback (most recent call last):
+  File "/srv/ring/ingest/json_decoder.py", line 39, in parse_telemetry
+    return json.loads(raw_body)
+json.decoder.JSONDecodeError: Expecting ',' delimiter: line 1 column 74 (char 73)
+Payload: {"device_id": "RING-FLOOD-5011", "event": "motion_detected" "lux": 12}
+2026-11-25T10:26:15Z | WARN | api-gateway | device=RING-FLOOD-5011 | Retry queued for dropped telemetry frame
+
+2026-11-25T11:02:19Z | INFO | motion-pipeline | device=RING-CHIME-3015 | Subscribed to chime alert topic
+2026-11-25T11:10:03Z | ERROR | motion-pipeline | device=RING-CHIME-3015 | MotionAlertPipelineError: downstream push_notification service returned HTTP 503
+Traceback (most recent call last):
+  File "/srv/ring/alerts/dispatcher.py", line 204, in dispatch_motion_alert
+    resp = notify_client.post("/v2/push_notification", json=alert_payload, timeout=2.0)
+MotionAlertPipelineError: 503 Service Unavailable - push notification worker pool saturated; clip upload failed for event_id=evt-7721
+2026-11-25T11:14:22Z | INFO | motion-pipeline | device=RING-CAM-1042 | Motion alert delivered to mobile client
+
+2026-11-25T12:01:05Z | INFO | auth-service | device=RING-ALARM-4090 | Token introspection requested
+2026-11-25T12:04:18Z | ERROR | auth-service | device=RING-ALARM-4090 | 401 Unauthorized: Expired device JWT token presented on telemetry sync
+Traceback (most recent call last):
+  File "/srv/ring/auth/jwt_verifier.py", line 88, in validate_device_token
+    claims = jwt.decode(token, PUBLIC_KEY, algorithms=["RS256"])
+jwt.exceptions.ExpiredSignatureError: Expired device JWT token (exp=2026-11-25T11:30:00Z)
+2026-11-25T12:08:55Z | INFO | api-gateway | device=RING-CAM-1042 | Routine telemetry check passed

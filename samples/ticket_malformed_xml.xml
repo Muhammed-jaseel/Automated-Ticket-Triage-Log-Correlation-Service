@@ -1,0 +1,9 @@
+<ticket>
+  <ticket_id>TKT-2026-1002</ticket_id>
+  <device_id>RING-DOOR-2088</device_id>
+  <reported_at>2026-11-25T09:38:00Z</reported_at>
+  <customer_name>Priya Nair</customer_name>
+  <customer_email>priya.nair@example.com</customer_email>
+  <issue_summary>Doorbell event history missing recent chime trigger after firmware update.</issue_summary>
+  <window_minutes>15</window_minutes>
+</ticket>

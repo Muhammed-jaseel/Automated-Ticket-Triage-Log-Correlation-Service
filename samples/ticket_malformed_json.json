@@ -1,0 +1,9 @@
+{
+  "ticket_id": "TKT-2026-1003",
+  "device_id": "RING-FLOOD-5011",
+  "reported_at": "2026-11-25T10:24:00Z",
+  "customer_name": "Marcus Chen",
+  "customer_email": "marcus.chen@example.com",
+  "issue_summary": "Floodlight camera failed to log night motion telemetry.",
+  "window_minutes": 15
+}

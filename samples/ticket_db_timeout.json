@@ -1,0 +1,9 @@
+{
+  "ticket_id": "TKT-2026-1001",
+  "device_id": "RING-CAM-1042",
+  "reported_at": "2026-11-25T08:13:00Z",
+  "customer_name": "Alex Rivera",
+  "customer_email": "alex.rivera@example.com",
+  "issue_summary": "Front porch camera stopped recording motion clips around 08:12 UTC.",
+  "window_minutes": 15
+}
